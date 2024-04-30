@@ -81,19 +81,6 @@
 
                 // send data on insert qry page
                 $.ajax({
-                    url: "./insert-qry.php",
-                    type: "POST",
-                    data: {
-                        name: name,
-                        email: email
-                    },
-                    success: function(response) {
-                        alert(response);
-                        $("#name").val("");
-                        $("#email").val("");
-                    }
-                })
-
 
             })
 
