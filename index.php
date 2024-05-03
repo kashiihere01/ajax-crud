@@ -38,16 +38,16 @@
         <div class="row ">
             <div class="col-md-4 px-3 mt-2">
                 <label class="form-label"> Name</label>
-                <input type="text" class="form-control  mb-3" id="name" placeholder="Enter here..." />
+                <input type="text" class="form-control  mb-3" id="name" placeholder="Enter here..."  required/>
             </div>
 
             <div class="col-md-4 px-3 mt-2">
                 <label class="form-label">Email</label>
-                <input type="text" class="form-control mb-3" id='email' placeholder="Enter here..." />
+                <input type="text" class="form-control mb-3" id='email' placeholder="Enter here..." required/>
             </div>
             <div class="col-md-4 px-3 mt-2">
                 <label class="form-label">Password</label>
-                <input type="text" class="form-control mb-3" id='password' placeholder="Enter here..." />
+                <input type="password" class="form-control mb-3" id='password' placeholder="Enter here..." required/>
             </div>
             <div class="col-md-4 mt-3 mx-auto">
                 <label class="form-label"></label>
@@ -56,20 +56,24 @@
         </div>
 <!-- model -->
  <!-- Modal -->
- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-            <form method="POST">
+            
                 <input type="hidden" id="item_id" value="" />
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    
+                <form method="POST">
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Product title" required autocomplete="off">
+                            <input type="text" class="form-control" id="name" placeholder="Enter here" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter here" required autocomplete="off">
                         </div>
                     <div class="alert alert-success" style="display: none"; id="messages"></div>
                 </div>
@@ -117,7 +121,6 @@
                     type: "POST",
                     data: {
                      name: name,
-                       
                         email: email,
                         password: password
 
@@ -130,7 +133,7 @@
                       
                         $("#email").val("");
                         $("#password").val("");
-                     
+                        loadData();
                      
                     }
                 })
@@ -148,11 +151,10 @@ function loadData() {
                     },
                     success: function(response) {
                         $('#data_table').html(response);
-                        $(".loader").hide();
+                       
+                        
                     },
-                    beforeSend: function(xhr) {
-                        $(".loader").show();
-                    },
+                   
 
                     error: function(err) {
                         console.log(err);
@@ -161,27 +163,28 @@ function loadData() {
             }
 
             loadData();
-// edit data
+            // edit data
             $(document).on("click", '.editBtn', function() {
                 let id = $(this).data('id');
                 $.ajax({
                     url: "./single.php",
-                    type: "POST",
+                    type: "GET",
                     data: {
                         id: id
                     },
+                    
                     success: function(res) {
-                        // console.log(res);
+                        
                         let data = JSON.parse(res);
                        $("#name").val(data.name);
+                       console.log(data.name)
                        $("#item_id").val(data.id);
-                        $("#exampleModal").modal("show");
+                        $("#editModal").modal("show");
                         // console.log(data.name)
                     }
                 })
             });
-
-            // update item
+            //update item
             $("#updateBtn").on("click",  function(e) {
                 e.preventDefault();
                 $.ajax({
@@ -201,16 +204,16 @@ function loadData() {
                         }, 2000)
                     }
                 })
+
+            
             })
 
-
+            
             // hide modal event
             const myModalEl = document.getElementById('exampleModal')
             myModalEl.addEventListener('hidden.bs.modal', event => {
                 loadData();
             })
-
-
         })
     </script>
 </body>
