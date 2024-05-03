@@ -1,7 +1,7 @@
 <?php
 
 // database connection
-$db_con = mysqli_connect("localhost", "root", "", "ajax-crud");
-if (!$db_con) {
+$con = mysqli_connect("localhost", "root", "", "ajax-crud");
+if (!$con) {
     die("database not connected");
 }
