@@ -16,7 +16,9 @@
 </head>
 
 <body>
-
+<div class="mt-5 ms-5">
+            <input type="text" id="searchInput" placeholder="type to search" class="form-control w-50" />
+        </div>
     <div class="container w-75 shadow mx-auto mt-5 p-5">
 
         <h3 class=" p-1 mb-2">Add <span class="text-primary"> User</span> Information</h3>
@@ -54,8 +56,31 @@
                 <input type="submit" id="send" class="btn btn-primary w-100" name="submit" value="Submit" />
             </div>
         </div>
-<!-- model -->
- <!-- Modal -->
+<!-- delete model -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+    Are you sure , Do you want to delete this?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="deleteBtn">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- end deleted -->
+ <!-- edit  Modal -->
  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -68,12 +93,16 @@
                 <div class="modal-body">
                 <form method="POST">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter here" required autocomplete="off">
+                            <label for="name2" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name2" placeholder="Enter here" required autocomplete="off">
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter here" required autocomplete="off">
+                            <label for="email2" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email2" placeholder="Enter here" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password2" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password2" placeholder="Enter here" required autocomplete="off">
                         </div>
                     <div class="alert alert-success" style="display: none"; id="messages"></div>
                 </div>
@@ -176,8 +205,11 @@ function loadData() {
                     success: function(res) {
                         
                         let data = JSON.parse(res);
-                       $("#name").val(data.name);
-                       console.log(data.name)
+                       $("#name2").val(data.name);
+                       $("#email2").val(data.email);
+                       
+                       $("#password2").val(data.password);
+                   
                        $("#item_id").val(data.id);
                         $("#editModal").modal("show");
                         // console.log(data.name)
@@ -191,30 +223,87 @@ function loadData() {
                     url: "./update.php",
                     type: "POST",
                     data: {
-                        name: $("#name").val(),
-                        email: $("#email").val(),
-                        password: $("#password").val(),
+                        name: $("#name2").val(),
+                        email: $("#email2").val(),
+                        password: $("#password2").val(),
                         id: $("#item_id").val()
                     },
                     success: function(res) {
                         $("#messages").html(res).show();
                         setTimeout(() => {
                             $("#messages").hide();
-                            $("#exampleModal").modal("hide");
+                            $("#editModal").modal("hide");
+                        }, 2000)
+                    }
+                })
+//
+            
+            })
+
+            
+    // delete data
+
+
+       // edit data
+       $(document).on("click", '.deleteBtn', function() {
+                let id = $(this).data('id');
+                $.ajax({
+                    url: "./single.php",
+                    type: "GET",
+                    data: {
+                        id: id
+                    },
+                    
+                    success: function(res) {
+                        
+                        let data = JSON.parse(res);
+                       $("#name2").val(data.name);
+                       $("#email2").val(data.email);
+                       
+                       $("#password2").val(data.password);
+                   
+                       $("#item_id").val(data.id);
+                        $("#deleteModal").modal("show");
+                        // console.log(data.name)
+                    }
+                })
+            });
+
+
+            // delete query
+            $("#deleteBtn").on("click",  function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "./delte.php",
+                    type: "POST",
+                    data: {
+                    
+                    },
+                    success: function(res) {
+                        $("#messages").html(res).show();
+                        setTimeout(() => {
+                            $("#messages").hide();
+                            $("#delteModal").modal("hide");
                         }, 2000)
                     }
                 })
 
-            
-            })
 
-            
+
             // hide modal event
-            const myModalEl = document.getElementById('exampleModal')
+            const myModalEl = document.getElementById('editModal')
             myModalEl.addEventListener('hidden.bs.modal', event => {
                 loadData();
             })
+
+
+
+            })
+
         })
+            // search inputs
+
+
     </script>
 </body>
 

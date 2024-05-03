@@ -24,7 +24,7 @@ while($row = mysqli_fetch_assoc($result)){
     $html .= "<td>$row[name]</td>";
     $html .= "<td>$row[email]</td>";
     $html .= "<td>$row[password]</td>";
-    $html .= "<td><button class='btn btn-warning btn-sm me-2 editBtn' data-id='$row[id]'>Edit</button><button class='btn btn-danger btn-sm'>Delete</button></td>";
+    $html .= "<td><button class='btn btn-warning btn-sm me-2 editBtn' data-id='$row[id]'>Edit</button><button class='btn btn-danger btn-sm deleteBtn' data-id='$row[id]'>Delete</button></td>";
     $html .= "</tr>";
 }
 
