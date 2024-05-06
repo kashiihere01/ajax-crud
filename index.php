@@ -16,9 +16,7 @@
 </head>
 
 <body>
-<div class="mt-5 ms-5">
-            <input type="text" id="searchInput" placeholder="type to search" class="form-control w-50" />
-        </div>
+
     <div class="container w-75 shadow mx-auto mt-5 p-5">
 
         <h3 class=" p-1 mb-2">Add <span class="text-primary"> User</span> Information</h3>
@@ -27,7 +25,7 @@
         <div class="row">
             <div class="col-md-12">
                 <!-- alert for success -->
-                <div class="alert alert-success alert-dismissible fade show msg" id="success" role="alert" style="display: none;">
+                <div class="alert alert-success alert-dismissible fade show msg credErr" id="success" role="alert" style="display: none;">
 
                 </div>
                 <!-- alert for error -->
@@ -67,12 +65,14 @@
         <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      
+      <input type="hidden" id="del_id" value="" />
       <div class="modal-body">
     Are you sure , Do you want to delete this?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" id="deleteBtn">Yes</button>
+        <button type="button" class="btn btn-danger" id="deleteConfirm">Yes</button>
       </div>
     </div>
   </div>
@@ -122,7 +122,12 @@
             <span class="visually-hidden">Loading...</span>
         </div>
 
-        <div id="data_table">
+        <!-- search input -->
+        <div class="mt-5 ">
+            <input type="text" id="searchInput" placeholder="type to search" class="form-control w-50" />
+        </div>
+<!-- show data -->
+        <div id="data_table" class="mt-2">
 
         </div>
 
@@ -171,12 +176,12 @@
             })
 // show data
 
-function loadData() {
+function loadData(query) {
                 $.ajax({
                     url: "./ajax.php",
-                    type: "POST",
+                    type: "GET",
                     data: {
-
+                        query : query
                     },
                     success: function(response) {
                         $('#data_table').html(response);
@@ -241,11 +246,9 @@ function loadData() {
             })
 
             
-    // delete data
+             // delete data
 
-
-       // edit data
-       $(document).on("click", '.deleteBtn', function() {
+         $(document).on("click", '.deleteBtn', function() {
                 let id = $(this).data('id');
                 $.ajax({
                     url: "./single.php",
@@ -257,12 +260,8 @@ function loadData() {
                     success: function(res) {
                         
                         let data = JSON.parse(res);
-                       $("#name2").val(data.name);
-                       $("#email2").val(data.email);
-                       
-                       $("#password2").val(data.password);
-                   
-                       $("#item_id").val(data.id);
+            
+                       $("#del_id").val(data.id);
                         $("#deleteModal").modal("show");
                         // console.log(data.name)
                     }
@@ -270,25 +269,37 @@ function loadData() {
             });
 
 
-            // delete query
-            $("#deleteBtn").on("click",  function(e) {
-                e.preventDefault();
+           //update item
+           $("#deleteConfirm").on("click",  function() {
+            
+            console.log($("#del_id").val())
+
                 $.ajax({
-                    url: "./delte.php",
-                    type: "POST",
+                    url: "./delete.php",
+                    type: "GET",
                     data: {
-                    
+                        id: $("#del_id").val()
                     },
                     success: function(res) {
-                        $("#messages").html(res).show();
+                        console.log(res)
+                        $("#success").html(res).show();
                         setTimeout(() => {
                             $("#messages").hide();
-                            $("#delteModal").modal("hide");
-                        }, 2000)
+                            $("#deleteModal").modal("hide");
+                        }, 1000)
+                        loadData()
                     }
                 })
+//
+            
+            })
+
+            
+            
 
 
+
+      
 
             // hide modal event
             const myModalEl = document.getElementById('editModal')
@@ -298,12 +309,22 @@ function loadData() {
 
 
 
-            })
+    
 
-        })
+  
             // search inputs
 
-
+        // search / filter
+        $("#searchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                if(value.length > 1) {
+                    loadData(value);
+                } else {
+                    loadData();
+                }
+            });
+            })
+    
     </script>
 </body>
 

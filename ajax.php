@@ -1,7 +1,14 @@
 <?php
 require_once "config.php";
 
-$sql = "SELECT * FROM users";
+$q = ( isset($_GET['query']) && !empty($_GET['query'])) ? trim($_GET['query']) : null; 
+
+$sql = "SELECT * FROM users ";
+
+if($q !== null) {
+    $sql .= " WHERE name LIKE '%".$q."%' ";
+}
+
 $result = mysqli_query($con, $sql);
 
 $html = "<table class='table table-striped'>";

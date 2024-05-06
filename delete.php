@@ -3,12 +3,11 @@
 
  $id = $_GET['id'];
 
- $sql = "DELETE FROM students WHERE id = $id";
- $result = mysqli_query($con , $sql);
- if ($result) {
-   echo "Data deleted successfully....!";
-} else {
-   echo "Data is not Not deleted ....!";
+ $sql = "DELETE FROM users WHERE id = $id";
+ 
+ if (mysqli_query($con , $sql)) {
+
+   echo "successfully deletes";
 }
 
 ?>
