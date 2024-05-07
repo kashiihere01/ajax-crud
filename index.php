@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-md-12">
                 <!-- alert for success -->
-                <div class="alert alert-success alert-dismissible fade show msg credErr" id="success" role="alert" style="display: none;">
+                <div class="alert alert-success alert-dismissible fade show msg success " id="success" role="alert" style="display: none;">
 
                 </div>
                 <!-- alert for error -->
@@ -40,7 +40,7 @@
                 <label class="form-label"> Name</label>
                 <input type="text" class="form-control  mb-3" id="name" placeholder="Enter here..."  required/>
             </div>
-
+          
             <div class="col-md-4 px-3 mt-2">
                 <label class="form-label">Email</label>
                 <input type="text" class="form-control mb-3" id='email' placeholder="Enter here..." required/>
@@ -49,11 +49,27 @@
                 <label class="form-label">Password</label>
                 <input type="password" class="form-control mb-3" id='password' placeholder="Enter here..." required/>
             </div>
+            <div class="row">
+                     
+            <div class="col-md-">
+                <!-- alert for success -->
+                <div class="alert alert-success alert-dismissible fade show msg success " id="success" role="alert" style="display: none;">
+
+                </div>
+                <!-- alert for error -->
+                <div class="alert alert-danger alert-dismissible fade show msg" id="error" role="alert" style="display: none;">
+                </div>
+            </div>
+        </div>
+            </div>
             <div class="col-md-4 mt-3 mx-auto">
                 <label class="form-label"></label>
                 <input type="submit" id="send" class="btn btn-primary w-100" name="submit" value="Submit" />
             </div>
-        </div>
+
+
+      
+       
 <!-- delete model -->
 
 
@@ -176,12 +192,14 @@
             })
 // show data
 
-function loadData(query) {
+function loadData(page,query=null) {
                 $.ajax({
                     url: "./ajax.php",
                     type: "GET",
                     data: {
-                        query : query
+                 
+                        query : query,
+                        page : page
                     },
                     success: function(response) {
                         $('#data_table').html(response);
@@ -196,7 +214,7 @@ function loadData(query) {
                 });
             }
 
-            loadData();
+            loadData(1);
             // edit data
             $(document).on("click", '.editBtn', function() {
                 let id = $(this).data('id');
@@ -234,9 +252,9 @@ function loadData(query) {
                         id: $("#item_id").val()
                     },
                     success: function(res) {
-                        $("#messages").html(res).show();
+                        $("#success").html(res).show();
                         setTimeout(() => {
-                            $("#messages").hide();
+                            $("#success").hide();
                             $("#editModal").modal("hide");
                         }, 2000)
                     }
@@ -266,7 +284,8 @@ function loadData(query) {
                         // console.log(data.name)
                     }
                 })
-            });
+
+
 
 
            //update item
@@ -284,10 +303,10 @@ function loadData(query) {
                         console.log(res)
                         $("#success").html(res).show();
                         setTimeout(() => {
-                            $("#messages").hide();
+                            $("#success").hide();
                             $("#deleteModal").modal("hide");
                         }, 1000)
-                        loadData()
+                        loadData(1)
                     }
                 })
 //
@@ -297,18 +316,27 @@ function loadData(query) {
             
             
 
+        });
+   /// hide modal event
+   const myModalEl = document.getElementById('deleteModal')
+            myModalEl.addEventListener('hidden.bs.modal', event => {
+                loadData(1);
+            })
 
+           // pagination
+           $(document).on('click', '.page', function() {
+                let page = $(this).data('page');
+                let search = $("#searchInput").val();
+                if(search.length > 0) {
+                    loadData(page, search);
+                } else {
+                    loadData(page);
+                }
+            });
 
       
 
-            // hide modal event
-            const myModalEl = document.getElementById('editModal')
-            myModalEl.addEventListener('hidden.bs.modal', event => {
-                loadData();
-            })
-
-
-
+        
     
 
   
@@ -320,7 +348,7 @@ function loadData(query) {
                 if(value.length > 1) {
                     loadData(value);
                 } else {
-                    loadData();
+                    loadData(1);
                 }
             });
             })
