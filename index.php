@@ -183,7 +183,7 @@
                       
                         $("#email").val("");
                         $("#password").val("");
-                        loadData();
+                        loadData(1);
                      
                     }
                 })
